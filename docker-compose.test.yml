@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  backend:
+    image: registry.gitlab.propulsion-home.ch/full-stack/batch-16-may-2021/motion-backend/team-5:latest
+    restart: always
+    env_file:
+      - .env/dev.env
+    command: "sh /scripts/run.sh"
+    volumes:
+    - static-files:/static-files
+    - media-files:/media-files
+    - frontend:/frontend/build
+    depends_on:
+      - postgres
+
+
+  postgres:
+    image: postgres:latest
+    env_file:
+      - .env/dev.env
+    volumes:
+    - postgres_volume:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/test.conf:/etc/nginx/conf.d/test.conf
+      - static-files:/static-files
+      - media-files:/media-files
+      - /etc/letsencrypt:/etc/letsencrypt
+      - frontend:/frontend
+
+
+volumes:
+  postgres_volume:
+  static-files:
+  media-files:
+  frontend:

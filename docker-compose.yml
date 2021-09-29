@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  backend:
+    image: registry.gitlab.propulsion-home.ch/full-stack/batch-16-may-2021/motion-backend/team-5:latest
+    ports:
+      - 8000:8000
+    env_file:
+      - .env/dev.env
+    volumes:
+      - ./backend:/backend
+    command: "tail -f /dev/null"
+    depends_on:
+      - postgres
+
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    env_file:
+      - .env/dev.env
+    volumes:
+    - postgres_volume:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_volume:
+  static-files:
+  media-files:
+  frontend:
